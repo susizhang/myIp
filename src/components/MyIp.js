@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import "./MyIp.css";
+import { MyMap } from "./MyMap";
+import { Countries } from "./Countries";
 
 export const MyIp = () => {
   const [myIp, setMyIp] = useState([]);
@@ -16,12 +18,12 @@ export const MyIp = () => {
           ` ${REACT_APP_GEOIPIFY_URL}/country,city?apiKey=${REACT_APP_GEOIPIFY_APIKEY}`
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setMyIp([
             res.data.ip,
             res.data.location.region,
             res.data.location.country,
-            res.data.location.timezone,
+            // res.data.location.timezone,
           ]);
         });
     } catch (e) {
@@ -33,24 +35,24 @@ export const MyIp = () => {
     getIp();
   }, [getIp]);
 
+  const region = myIp[1];
+
   return (
-    <div className="myIp">
-      <h1>Your IP address is {myIp[0]} </h1>
-      <p>
-        You are currently located in {myIp[1]} , {myIp[2]}
-      </p>
-      <hr />
+    <>
       <div>
-        icon
-        <div>We are the {myIp[3]}</div>
+        <MyMap />
       </div>
       <div>
-        icon
-        <div>
-          Your local time is{" "}
-          {/* {new Date().toLocalString("en-US", { timeZone: myIp[3] })} */}
-        </div>
+        <img src="https://flagcdn.com/w320/de.png" alt="flag" />
       </div>
-    </div>
+      <div className="myIp">
+        <h1>Your IP address is {myIp[0]} </h1>
+        <p>
+          You are currently located in {region} , {myIp[2]}
+        </p>
+        <hr />
+        <Countries region={region} />
+      </div>
+    </>
   );
 };
